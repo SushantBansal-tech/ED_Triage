@@ -1,0 +1,74 @@
+# ========================
+# Compiled Output
+# ========================
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# ========================
+# IDE Files
+# ========================
+.idea/
+*.iml
+.eclipse
+.classpath
+.project
+.settings/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ========================
+# Spring Boot / App Config
+# ========================
+application-local.properties
+application-local.yml
+application-prod.properties
+application-prod.yml
+application-staging.yml
+*.env
+.env
+.env.*
+
+# ========================
+# Secrets & Credentials
+# ========================
+**/secrets/
+*-secret.yml
+*-secret.properties
+keystore.jks
+*.p12
+*.pem
+*.key
+
+# ========================
+# Logs
+# ========================
+logs/
+*.log
+*.log.*
+
+# ========================
+# OS Files
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# Maven Wrapper (optional)
+# ========================
+# Keep mvnw and .mvn/ if teammates don't have Maven installed
+# Uncomment to ignore:
+# .mvn/
+# mvnw
+# mvnw.cmd
+
+# ========================
+# Docker (local only)
+# ========================
+docker-compose.override.yml
