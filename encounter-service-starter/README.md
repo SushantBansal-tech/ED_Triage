@@ -1,52 +1,23 @@
-# Encounter Service Starter
+# Emergency Department Management Platform
 
-A starter full-stack codebase for a healthcare Encounter Service with a React frontend dashboard and a Java Spring Boot backend.
+A backend-focused microservices project built to model core emergency department workflows such as patient intake, encounter tracking, triage data handling, and queue management.
 
-## Stack
-- Frontend: React, TypeScript, Vite, React Router, TanStack Query, MUI
-- Backend: Java 21, Spring Boot 3, Spring Web, Spring Data JPA, PostgreSQL, Flyway, Validation
+The project demonstrates how modular backend services can be designed for healthcare-inspired operational workflows using Java, Spring Boot, REST APIs, MongoDB, and containerized deployment patterns.
 
-## Structure
-- `frontend/` React encounter dashboard
-- `backend/` Spring Boot encounter service
-- `docs/` API and design notes
+## Current Scope
 
-## Core modules
-- Encounter queue dashboard
-- Encounter detail page
-- Encounter create form
-- Encounter status update workflow
-- REST APIs for encounter lifecycle
+This project currently includes:
+- Patient encounter lifecycle handling
+- Triage intake data capture
+- Queue management workflows
+- Audit logging and soft delete support
+- Modular service-to-service communication patterns
+- Container-ready backend deployment structure
 
-## Frontend folders
-```text
-src/
-  api/
-  app/
-  components/
-  features/encounters/
-  layouts/
-  pages/
-  routes/
-  theme/
-  types/
-```
+## Planned Scope
 
-## Backend folders
-```text
-src/main/java/com/acme/encounter/
-  config/
-  controller/
-  dto/
-  entity/
-  mapper/
-  repository/
-  service/
-  exception/
-```
-
-## Run order
-1. Start PostgreSQL.
-2. Run backend with Spring Boot.
-3. Run frontend with Vite.
-4. Open the dashboard and test create/list/update encounter flows.
+The following features are planned for future versions:
+- AI/ML-based triage recommendation engine
+- Risk scoring and escalation recommendations
+- Clinical decision support enhancements
+- Real-time analytics dashboard
