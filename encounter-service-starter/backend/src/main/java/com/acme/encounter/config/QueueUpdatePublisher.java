@@ -1,7 +1,5 @@
 package com.acme.encounter.config;
 
-package com.example.ed.queue.websocket;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,6 @@
-import org.ansgar.nell.spring.security.database.model.CustomUser;
+package com.acme.encounter.repository;
+import com.acme.encounter.entity.CustomUser;  // fix this line
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

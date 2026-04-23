@@ -1,5 +1,12 @@
 package com.acme.encounter.entity;
 
+
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.OffsetDateTime;
+
+// rest of class unchanged
+
 @Entity
 @Table(name = "triage_assessments")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder

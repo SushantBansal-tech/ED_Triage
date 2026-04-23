@@ -1,4 +1,7 @@
-import org.ansgar.nell.spring.security.database.repository.UserRepository;
+// CustomUserDetailsService.java
+package com.acme.encounter.service;
+import com.acme.encounter.repository.UserRepository;  // fix this line
+//import org.ansgar.nell.spring.security.database.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

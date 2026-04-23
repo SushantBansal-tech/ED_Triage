@@ -1,6 +1,5 @@
-package com.example.ed.queue.service;
-
-import com.example.ed.queue.entity.QueueEntry;
+package com.acme.encounter.service;  // was com.example.ed.queue.service
+import com.acme.encounter.entity.QueueEntry;  // was com.example.ed.queue.entity
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;

@@ -1,5 +1,13 @@
 package com.acme.encounter.entity;
 
+
+
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.OffsetDateTime;
+
+// rest of class unchanged
+
 @Entity
 @Table(name = "queue_entries")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
