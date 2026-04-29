@@ -5,10 +5,11 @@ import com.acme.encounter.dto.EncounterResponse;
 import com.acme.encounter.entity.CurrentUserPrincipal;
 import com.acme.encounter.entity.Encounter;
 import com.acme.encounter.entity.EncounterStatus;
-import com.acme.encounter.exception.ResourceNotFoundException;
+//import com.acme.encounter.exception.ResourceNotFoundException;
 import com.acme.encounter.mapper.EncounterMapper;
 import com.acme.encounter.repository.EncounterRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,9 +21,16 @@ import java.util.UUID;
 public class EncounterServiceImpl implements EncounterService {
 
     private final EncounterRepository encounterRepository;
+    private final EncounterAuthorizationService encounterAuthorizationService;
 
     @Override
     public List<EncounterResponse> getAll(CurrentUserPrincipal currentUser) {
+        if (!(currentUser.hasRole("ROLE_ADMIN")
+                || currentUser.hasRole("ROLE_DOCTOR")
+                || currentUser.hasRole("ROLE_NURSE"))) {
+            throw new AccessDeniedException("Not authorized to view all encounters");
+        }
+
         return encounterRepository.findAll()
                 .stream()
                 .map(EncounterMapper::toResponse)
@@ -31,7 +39,15 @@ public class EncounterServiceImpl implements EncounterService {
 
     @Override
     public List<EncounterResponse> getMyEncounters(CurrentUserPrincipal currentUser) {
-        return encounterRepository.findById(currentUser.getPatientId())
+        if (!currentUser.hasRole("ROLE_PATIENT")) {
+            throw new AccessDeniedException("Only patients can access their own encounters");
+        }
+
+        if (currentUser.getPatientId() == null) {
+            throw new AccessDeniedException("Patient mapping not found for current user");
+        }
+
+        return encounterRepository.findByPatientId(currentUser.getPatientId())
                 .stream()
                 .map(EncounterMapper::toResponse)
                 .toList();
@@ -39,11 +55,18 @@ public class EncounterServiceImpl implements EncounterService {
 
     @Override
     public EncounterResponse getById(Long id, CurrentUserPrincipal currentUser) {
-        return EncounterMapper.toResponse(findEncounter(id));
+        Encounter encounter = encounterAuthorizationService.requireEncounterAccess(id, currentUser);
+        return EncounterMapper.toResponse(encounter);
     }
 
     @Override
     public EncounterResponse create(CreateEncounterRequest request, CurrentUserPrincipal currentUser) {
+        if (!(currentUser.hasRole("ROLE_ADMIN")
+                || currentUser.hasRole("ROLE_DOCTOR")
+                || currentUser.hasRole("ROLE_NURSE"))) {
+            throw new AccessDeniedException("Not authorized to create encounter");
+        }
+
         LocalDateTime now = LocalDateTime.now();
         Encounter encounter = new Encounter();
         encounter.setEncounterNumber("ENC-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
@@ -56,12 +79,20 @@ public class EncounterServiceImpl implements EncounterService {
         encounter.setStatus(EncounterStatus.ARRIVED);
         encounter.setCreatedAt(now);
         encounter.setUpdatedAt(now);
+
         return EncounterMapper.toResponse(encounterRepository.save(encounter));
     }
 
     @Override
     public EncounterResponse updateStatus(Long id, EncounterStatus status, CurrentUserPrincipal currentUser) {
-        Encounter encounter = findEncounter(id);
+        Encounter encounter = encounterAuthorizationService.requireEncounterAccess(id, currentUser);
+
+        if (!(currentUser.hasRole("ROLE_ADMIN")
+                || currentUser.hasRole("ROLE_DOCTOR")
+                || currentUser.hasRole("ROLE_NURSE"))) {
+            throw new AccessDeniedException("Not authorized to update encounter status");
+        }
+
         encounter.setStatus(status);
         encounter.setUpdatedAt(LocalDateTime.now());
 
@@ -77,8 +108,8 @@ public class EncounterServiceImpl implements EncounterService {
         return EncounterMapper.toResponse(encounterRepository.save(encounter));
     }
 
-    private Encounter findEncounter(Long id) {
-        return encounterRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Encounter not found: " + id));
-    }
+    // private Encounter findEncounter(Long id) {
+    //     return encounterRepository.findById(id)
+    //             .orElseThrow(() -> new ResourceNotFoundException("Encounter not found: " + id));
+    // }
 }
