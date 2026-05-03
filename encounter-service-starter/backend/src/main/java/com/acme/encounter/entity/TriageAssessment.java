@@ -13,7 +13,8 @@ import java.time.OffsetDateTime;
 public class TriageAssessment {
     @Id
     @Column(name = "triage_assessment_id")
-    private String triageAssessmentId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long triageAssessmentId;
 
     @Column(name = "encounter_id", nullable = false)
     private String encounterId;

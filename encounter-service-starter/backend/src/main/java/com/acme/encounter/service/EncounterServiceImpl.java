@@ -20,8 +20,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EncounterServiceImpl implements EncounterService {
 
-    private  EncounterRepository encounterRepository;
-    private  EncounterAuthorizationService encounterAuthorizationService;
+    private  final  EncounterRepository encounterRepository;
+    private  final EncounterAuthorizationService encounterAuthorizationService;
 
     @Override
     public List<EncounterResponse> getAll(CurrentUserPrincipal currentUser) {
