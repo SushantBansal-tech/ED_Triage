@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "triage_assessments")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+
 public class TriageAssessment {
     @Id
     @Column(name = "triage_assessment_id")

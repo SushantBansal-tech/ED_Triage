@@ -7,19 +7,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service @RequiredArgsConstructor
-public class TriageFinalizeService {
+import java.time.OffsetDateTime;
+import java.util.List;
 
-    // 1. Mark as final for proper injection
-    private  TriageAssessmentRepository assessmentRepo;
+@Service
+@RequiredArgsConstructor
+public class TriageFinalizeService {
+    private final TriageAssessmentRepository assessmentRepo;
+    private final QueueRankingService queueRankingService; // Injected
+    private final QueueEntryRepository queueEntryRepo;      // Repository for QueueEntry
 
     @Transactional
-    public void finalize(Long assessmentId) { // 2. Changed Long to String
-        TriageAssessment assessment = assessmentRepo.findById(assessmentId)
-                .orElseThrow(() -> new RuntimeException("Assessment not found"));
+    public void finalize(Long assessmentId) {
+        // 1. Update the triage assessment status in the database
+        assessmentRepo.updateTriageStatus(assessmentId, "FINALIZED");
 
-        // 3. Make sure your Entity has this method, or use the @Query update pattern
-        assessment.setTriageStatus("FINALIZED");
-        assessmentRepo.save(assessment);
+        // 2. Fetch all active patients currently in the queue
+        List<QueueEntry> activeEntries = queueEntryRepo.findByStatus("IN_QUEUE");
+
+        // 3. Trigger the ranking service to recompute ranks based on the new triage priority
+        List<QueueEntry> recomputedEntries = queueRankingService.recompute(activeEntries);
+
+        // 4. Save the newly ranked queue entries back to the database
+        queueEntryRepo.saveAll(recomputedEntries);
     }
 }

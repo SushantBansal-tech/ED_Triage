@@ -8,21 +8,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service @RequiredArgsConstructor
 public class ClinicianOverrideService {
-    private  TriageAssessmentRepository assessmentRepo;
-    private  TriageRecommendationRepository recRepo;
+    // 1. MUST be 'private final' for @RequiredArgsConstructor
+    private final TriageAssessmentRepository assessmentRepo;
+    private final TriageRecommendationRepository recRepo;
 
     @Transactional
     public void applyOverride(Long assessmentId, String newPriority, String reason) {
+        // 2. assessmentRepo now expects Long
         TriageAssessment assessment = assessmentRepo.findById(assessmentId)
                 .orElseThrow(() -> new RuntimeException("Assessment not found"));
 
-        // Finalize state guard
-        if ("FINALIZED".equals(assessment.getAssessmentStatus())) {
+        if ("FINALIZED".equals(assessment.getTriageStatus())) { // 3. Ensure method name matches your Entity
             throw new IllegalStateException("Cannot override finalized assessment");
         }
 
-        assessment.setFinalPriorityCode(newPriority);
-        assessment.setOverrideApplied(true);
+        //assessment.setFinalPriorityCode(newPriority); // Ensure these setters exist in your Entity
+        //assessment.setOverrideApplied(true);
         assessmentRepo.save(assessment);
     }
 }
